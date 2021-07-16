@@ -41,6 +41,34 @@ app.delete('/lists/:name', (req, res) => {
   }
 });
 
+
+app.put('/lists/:name', function (req, res) {
+  const { name } = req.params;
+   //Check if all fields are provided and are valid:
+  if (!req.body.name) {
+      res.status(400);
+      res.json({message: "Bad Request"});
+   } else {
+      //Gets the Index of List with given Name.
+     const updateName = data.map(el=>el.id).indexOf(name);      
+      if(updateName === -1){
+         //List not found, create new
+         data.push({
+            name: name,
+         });
+         res.json({
+            message: `New list created.`, location: "/lists/" + `${name}`});
+      } else {
+         //Update existing List
+         data[updateName] = {
+            name: name
+         };
+         res.json({message: `List with name ${name} updated.`,
+            location: `/lists/ ${name}`});
+      }
+   }
+});
+
 app.listen(PORT, (req, res) => {
   console.log(`Server started on port:${PORT}`);
 });
